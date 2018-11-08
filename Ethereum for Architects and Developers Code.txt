@@ -1,0 +1,1247 @@
+Listing 3-1 ABI
+[
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "kill",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "anyString",
+				"type": "string"
+			}
+		],
+		"name": "setSample",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getSample",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
+
+
+Listing 3-2 import part in a Solidity file
+import "filename" as symbolName;
+
+
+Listing 3-33
+pragma solidity ^0.4.0;
+contract MyContract{
+}
+
+Listing 3-3
+pragma solidity ^0.4.4;
+
+contractSimpleEnum {
+enumSomeData {DEFAULT,ONE,TWO}
+SomeDatasomeData;
+
+constructor () internal  {
+someData = SomeData.DEFAULT;
+    }
+
+function  setValues(uint _value) public payable{
+require(uint(SomeData.TWO) >= _value);
+someData = SomeData(_value);
+  }
+
+functiongetValue() public constant returns (uint){
+returnuint(someData);
+  }
+
+  
+ Listing 3-4
+pragma solidity ^0.4.0;
+contract MyContract {
+
+function myFunction(uint i) public {
+..
+}
+
+}
+But that can be overridden to be saved to storage instead.
+	
+pragma solidity ^0.4.0;
+contract MyContract {
+
+function myFunction(uint storage i) public {
+..
+}
+
+}
+
+
+Listing 3-5
+//This is an one-line comment
+/*
+This is a 
+Multiline comment
+*/
+
+
+Listing 3-6
+pragma solidity ^0.4.0;
+contract MyContract{
+	function myFunction() public {
+}
+}   
+The function can have different visibilities which are to be discussed later. Also a function can optionally return one or more values.
+contract MultiReturner {
+    function getData() constant returns (bytes32, bytes32) {
+        bytes32 a = "abcd";
+        bytes32 b = "wxyz";
+        return (a, b);
+    }
+
+    function getDynamicData()returns (bytes, bytes) {
+        bytes a;
+        a.push('a');
+        a.push('b');
+        a.push('c');
+        bytes b;
+        b.push('x');
+        b.push('y');
+        b.push('z');
+        return (a, b);
+    }
+}
+
+
+
+Listing 3-7
+contract UsesMultiReturner {
+    function doIt() {
+        mr = MultiReturner(0x1234);
+
+        // this will work
+        var (a, b) = mr.getData();
+
+        // this won't work
+        var (a, b) = mr.getDynamicData();
+    }
+}
+ 
+ 
+Listing 3-8
+pragma solidity ^0.4.0;
+
+contract Fallback {
+
+    function () payable {
+
+    }
+
+}
+
+
+Listing 3-9
+pragma solidity ^0.4.11;
+
+contract Purchase {
+    address public seller;
+
+    modifier onlySeller() { // Modifier
+        require(msg.sender == seller);
+        _;
+    }
+
+    function abort() public onlySeller { // Modifier usage
+        // ...
+    }
+}
+
+
+Listing 3-10
+pragma solidity ^0.4.0;
+contract MyContract{
+	function MyContract() {
+}
+}
+
+
+Listing 3-11
+pragma solidity ^0.4.0;
+
+contract MyContract{
+
+	constructor() public {
+	
+    }
+}
+ 
+ 
+Listing 3-12
+pragma solidity ^0.4.0;
+
+contract MyFirstContract {
+    string private name;
+    uint private age;
+
+    function setName(string newName) public {
+        name = newName;
+    }
+
+    function getName() public view returns (string) {
+        return name;
+    }
+
+    function setAge(uint newAge) public {
+        age = newAge;
+    }
+
+    function getAge() public view returns (uint) {
+        return age;
+    }
+}
+
+
+Listing 3-13
+contract MyContract {
+    address owner;
+    function checkUser(){ 
+        if (msg.sender != owner) { throw; }
+        // do something only the owner should be allowed to do
+    }
+}
+
+
+Listing 3-14
+if(msg.sender != owner) { revert(); }
+
+or by using a assert() check
+
+Listing 3-15
+assert(msg.sender == owner);
+
+or by a require() statement that we already saw before.
+
+Listing 3-16
+require(msg.sender == owner);
+
+
+
+Listing 3-17
+pragma solidity ^0.4.16; 
+
+contract UseConstant {
+
+    string greeting;
+
+    function UseConstant() public {
+        greeting = "Hello";
+    }
+
+    function SayHello() public constant returns(string says) {
+        return greeting;
+    }
+}
+
+
+Listing 3-18
+function returnTrue() public pure returns(bool) {
+    return true;
+}
+
+
+Listing 3-19
+pragma solidity ^0.4.0;
+
+contract Storage {
+
+    uint[] private vars;
+
+    function saveToStack() {
+        uint myVal1 = 1;
+        uint myVal2 = 2;
+    }
+
+    function saveToMemory() {
+        string memory myString = "test";
+    }
+
+    function saveToStorage() {
+        vars.push(2);
+        vars.push(3); 
+    }
+
+}
+
+Listing 3-20
+pragma solidity ^0.4.0;
+
+contract MyEvent {
+    event HighestBidIncreased(address bidder, uint amount); // Event
+
+    function MyEvent() {
+
+    }
+
+    function bid() public payable {
+        // ...
+        emit HighestBidIncreased(msg.sender, msg.value); // Triggering event
+    }
+}
+
+
+Listing 3-21
+pragma solidity ^0.4.0;
+
+contract MyFirstContract {
+    string private name;
+    uint private age;
+
+    function setName(string newName) public {
+        name = newName;
+    }
+
+    function getName() public view returns (string) {
+        return name;
+    }
+
+    function setAge(uint newAge) public {
+        age = newAge;
+    }
+
+    function getAge() public view returns (uint) {
+        return age;
+    }
+}
+
+Listing 3-22
+pragma solidity ^0.4.0;
+
+contract MyFirstContract {
+    string private name;
+    uint private age;
+
+    function setName(string newName) public {
+        name = newName;
+    }
+
+    function getName() public view returns (string) {
+        return name;
+    }
+
+    function setAge(uint newAge) public {
+        age = newAge;
+    }
+
+    function getAge() public view returns (uint) {
+        return age;
+    }
+}
+
+contract MysecondContract is MyFirstContract{
+
+    string private name;      
+
+    function setName(string newName) public {
+        name = "Test";
+    }
+
+    function getName() public view returns (string) {
+        return name;
+    }
+
+}
+
+Listing 3-24
+pragma solidity ^0.4.0;
+
+interface MyInterface {
+    function myFunction(string) returns (string);
+}
+
+contract MyImplementation is MyInterface {
+    function myFunction(string str) returns (string) { return str; }
+}
+
+
+
+Listing 3-25
+pragma solidity ^0.4.16;
+
+contract A {
+    function f(uint _in) public pure returns (uint) {
+        out = 1;
+    }
+
+    function f(uint _in, bytes32 _key) public pure returns (uint) {
+        out = 2;
+    }
+}
+
+
+Listing 3-26
+pragma solidity ^0.4.0;
+
+library MyLibrary {
+
+    function addTen(uint age) public pure returns (uint) {
+        return age + 10;
+    }
+}
+
+contract TestLibrary{
+
+    function testIncrementByTen(uint age) public pure returns (uint) {
+        return MyLibrary.addTen(age);
+    }
+}
+
+
+Listing 3-27
+pragma solidity ^0.4.18;
+contract KillSample {
+
+    string sampleString;
+    address owner;
+
+    constructor() public {
+       owner = msg.sender;
+    }
+
+    function setSample( string anyString) public {
+        sampleString = anyString;
+    }
+
+    function getSample() public view returns(string){
+        return sampleString;
+    }
+
+function kill() public {
+assert(owner == msg.sender); // We check who is calling
+selfdestruct(owner); //Destruct the contract
+
+    }
+}
+
+
+Listing 3-28
+pragma solidity ^0.4.0;
+contract Ballot {
+
+    struct Voter {
+        uint weight;
+        bool voted;
+        uint8 vote;
+        address delegate;
+    }
+    struct Proposal {
+        uint voteCount;
+    }
+
+    address chairperson;
+    mapping(address => Voter) voters;
+    Proposal[] proposals;
+
+    /// Create a new ballot with $(_numProposals) different proposals.
+    function Ballot(uint8 _numProposals) public {
+        chairperson = msg.sender;
+        voters[chairperson].weight = 1;
+        proposals.length = _numProposals;
+    }
+
+    /// Give $(toVoter) the right to vote on this ballot.
+    /// May only be called by $(chairperson).
+    function giveRightToVote(address toVoter) public {
+        if (msg.sender != chairperson || voters[toVoter].voted) return;
+        voters[toVoter].weight = 1;
+    }
+
+    /// Delegate your vote to the voter $(to).
+    function delegate(address to) public {
+        Voter storage sender = voters[msg.sender]; // assigns reference
+        if (sender.voted) return;
+        while (voters[to].delegate != address(0) && voters[to].delegate != msg.sender)
+            to = voters[to].delegate;
+        if (to == msg.sender) return;
+        sender.voted = true;
+        sender.delegate = to;
+        Voter storage delegateTo = voters[to];
+        if (delegateTo.voted)
+            proposals[delegateTo.vote].voteCount += sender.weight;
+        else
+            delegateTo.weight += sender.weight;
+    }
+
+    /// Give a single vote to proposal $(toProposal).
+    function vote(uint8 toProposal) public {
+        Voter storage sender = voters[msg.sender];
+        if (sender.voted || toProposal >= proposals.length) return;
+        sender.voted = true;
+        sender.vote = toProposal;
+        proposals[toProposal].voteCount += sender.weight;
+    }
+
+    function winningProposal() public constant returns (uint8 _winningProposal) {
+        uint256 winningVoteCount = 0;
+        for (uint8 prop = 0; prop < proposals.length; prop++)
+            if (proposals[prop].voteCount > winningVoteCount) {
+                winningVoteCount = proposals[prop].voteCount;
+                _winningProposal = prop;
+            }
+    }
+}
+
+
+
+Listing 3-29
+pragma solidity ^0.4.0;
+
+contract Storage {
+
+    uint[] private vars;
+
+    function saveToStack() {
+        uint myVal1 = 1;
+        uint myVal2 = 2;
+        assert(myVal1 == myVal2);
+    }
+
+    function saveToMemory() {
+        string memory myString = "test";
+        assert(bytes(myString).length == 10);
+    }
+
+    function aveToStorage() {
+        vars.push(2);
+        vars.push(3);
+        assert(vars.length == 4);
+    }
+
+}
+
+
+Listing 4-1
+F:\ethereum>ganache-cli
+Ganache CLI v6.1.8 (ganache-core: 2.2.1)
+
+Available Accounts
+==================
+(0) 0xc1039b33cf5736bcffab1eee983af7bc1b49c979 (~100 ETH)
+(1) 0xa7dd571bcc652d74432d1ea1b5a830aba775286f (~100 ETH)
+(2)0x4b02315fe9b74cfdbd7b1a8f6643951bc81f62fc (~100 ETH)
+
+
+Listing 4-2
+pragma solidity ^0.4.18;
+
+contractStudentDetails {
+
+stringfName;
+stringlName;
+stringdob;
+
+functionsetStudentDetails(string _fName, string _lName, string _dob) public {
+fName = _fName;
+lName = _lName;
+dob = _dob;
+   }
+
+functiongetStudentDetails() public constant returns (string, string, string) {
+return (fName, lName, dob);
+   }
+
+}
+
+
+Listing 4-3
+pragma solidity ^0.4.0;
+
+contract MyFirstContract {
+    string private name;
+    uint private age;
+
+    function setName(string newName) public {
+        name = newName;
+    }
+
+    function getName() public view returns (string) {
+        return name;
+    }
+
+    function setAge(uint newAge) public {
+        age = newAge;
+    }
+
+    function getAge() public view returns (uint) {
+        return age;
+    }
+}
+
+
+Listing 4-4
+{
+ "config": {
+        "chainId": 0,
+        "homesteadBlock": 0,
+        "eip155Block": 0,
+        "eip158Block": 0
+    },
+  "alloc"      : {},
+  "coinbase"   :"0x0000000000000000000000000000000000000000",
+  "difficulty" : "0x20000","gasLimit"   : "0x2fefd8",
+  "nonce"      : "0x0000000000000042",
+  "mixhash"    : "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "parentHash" : "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "timestamp"  : "0x00"
+}
+
+
+Listing 5-1
+pragma solidity ^0.4.18;
+
+contract StudentDetails {
+
+   string fName;
+   string lName;
+   string dob;
+
+   function setStudentDetails(string _fName, string _lName, string _dob) public {
+       fName = _fName;
+       lName = _lName;
+       dob = _dob;
+   }
+
+   function getStudentDetails() public constant returns (string, string, string) {
+       return (fName, lName, dob);
+   }
+
+}
+
+
+Listing 5-2
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Enrolment</title>
+
+<link rel="stylesheet" type="text/css" href="main.css">
+
+<script src="./node_modules/web3/dist/web3.min.js"></script>
+
+</head>
+<body>
+<div class="container">
+
+<h1>Student Enrolment</h1>
+
+<h2 id="instructor"></h2>
+
+<label for="name" class="col-lg-2 control-label">Student First Name</label>
+<input id="fname" type="text">
+		
+		<label for="name" class="col-lg-2 control-label">Student Last Name</label>
+<input id="lname" type="text">
+
+<label for="name" class="col-lg-2 control-label">Student DOB</label>
+<input id="dob" type="text">
+
+<button id="button">Enrol</button>
+
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+<script>
+
+        if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        } else {
+            // set the provider you want from Web3.providers
+            web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+        }
+		
+        web3.eth.defaultAccount = web3.eth.accounts[0];
+
+        var StudentDetailsContract = web3.eth.contract([ { "constant": false, "inputs": [ { "name": "_fName", "type": "string" }, { "name": "_lName", "type": "string" }, { "name": "_dob", "type": "string" } ], "name": "setStudentDetails", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "getStudentDetails", "outputs": [ { "name": "", "type": "string" }, { "name": "", "type": "string" }, { "name": "", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" } ]);
+
+        var StudentDetails = StudentDetailsContract.at('0x19065ef40336c61b61f5a5e55b87608687fb17f4');
+        console.log(StudentDetails);
+		
+		StudentDetails.getStudentDetails(function(error, result){
+            if(!error)
+                {
+                    $("#instructor").html('Enroled ' + result[0] + ' ' + result[1] + ' with DOB ' + result[2]);
+                    console.log(result);
+                }
+            else
+			{
+				console.error(error);
+			}
+        });
+
+        $("#button").click(function() {
+            StudentDetails.setStudentDetails($("#fname").val(), $("#lname").val(), $("#dob").val());
+        });
+
+
+</script>
+
+</body>
+</html>
+
+
+Listing 5-3
+body {
+    background-color:#F0F0F0;
+    padding: 2em;
+    font-family: 'Raleway','Source Sans Pro', 'Arial';
+}
+.container {
+    width: 50%;
+    margin: 0 auto;
+}
+label {
+    display:block;
+    margin-bottom:10px;
+}
+input {
+    padding:10px;
+    width: 50%;
+    margin-bottom: 1em;
+}
+button {
+    margin: 2em 0;
+    padding: 1em 4em;
+    display:block;
+}
+
+#instructor {
+    padding:1em;
+    background-color:#fff;
+    margin: 1em 0;
+}
+
+
+Listing 6-1
+pragma solidity ^0.4.0;
+import "github.com/oraclize/ethereum-api/oraclizeAPI.sol";
+
+contract USDRate is usingOraclize {
+
+    uint public price;
+
+    event Log USDRate(string text);
+
+    function USDRate() {
+        USDRate("USDRate Contract created.");
+        update();
+    }
+
+    function getPrice() constant returns (uint) {
+       return price;
+    }
+
+}
+
+
+Listing 6-2
+function update() payable {
+   Log("Oraclize query was sent, waiting for the answer.."); 
+   oraclize_query("URL","json(https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD).USD");
+}
+
+
+Listing 6-3
+function __callback(bytes32 _myid, string _result) {
+   require (msg.sender == oraclize_cbAddress());
+   Log(_result);
+   price = parseInt(_result, 2); // let's save it as $ cents
+}
+
+
+Listing 6-4
+
+pragma solidity ^0.4.0;
+import "github.com/oraclize/ethereum-api/oraclizeAPI.sol";
+
+contract USDRate is usingOraclize {
+
+    uint public price;
+
+    event LogUSDRate(string text);
+
+    constructor() {
+        emit LogUSDRate("USDRate Contract created.");
+        update();
+    }
+
+    function update() payable {
+        emit LogUSDRate("Oraclize query was sent, waiting for the answer.."); 
+        oraclize_query("URL","json(https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD).USD");
+    }
+
+    function __callback(bytes32 _myid, string _result) {
+        require (msg.sender == oraclize_cbAddress());
+        emit LogUSDRate(_result);
+        price = parseInt(_result, 2); // let's save it as $ cents
+    }
+
+    function getPrice() constant returns (uint) {
+       return price;
+    }
+
+}
+
+ 
+Listing 6-6
+oraclize_query("BEIGVzv6fJcFiYQNZF8ArHnvNMAsAWBz8Zwl0YCsy4K/RJTN8ERHfBWtSfYHt+
+  uegdD1wtXTkP30sTW+3xR3w/un1i3caSO0Rfa+wmIMmNHt4aOS","BNKdFtmfmazLLR/bfey4mP8
+  v/R5zCIUK7obcUrF2d6CWUMvKKUorQqYZNu1YfRZsGlp/F96CAQhSGomJC7oJa3PktwoW5J1Oti/
+  y2v4+b5+vN8yLIj1trS7p1l341Jf66AjaxnoFPplwLqE=", "BF5u1td9ugoacDabyfVzoTxPBxG
+  NtmXuGV7AFcO1GLmXkXIKlBcAcelvaTKIbmaA6lXwZCJCSeWDHJOirHiEl1LtR8lCt+1ISttWuvp
+  J6sPx3Y/QxTajYzxZfQb6nCGkv+8cczX0PrqKKwOn/Elf9kpQQCXeMglunT09H2B4HfRs7uuI");
+
+
+Listing 6-7
+oraclize_query(60, "URL", "json(http://api.fixer.io/latest?symbols=USD,GBP).rates.GBP");
+
+
+Listing 6-8
+F:\ethereum>ipfs version
+ipfs version 0.4.15
+
+
+
+Listing 6-9
+F:\ethereum>ipfs commands
+ipfs
+ipfs add
+ipfs bitswap
+ipfs bitswap ledger
+ipfs bitswap reprovide
+
+
+
+Listing 6-10
+F:\ethereum>ipfs help
+USAGE
+ipfs - Global p2p merkle-dag filesystem.
+
+  ipfs [--config=<config> | -c] [--debug=<debug> | -D] [--help=<help>] [-h=<h>] [--local=<local> | -L] [--api=<api>] <command> ...
+
+
+Listing 6-11
+$ ipfs init
+initializing IPFS node at .ipfs
+generating 2048-bit RSA keypair...done
+peer identity: QmPGx16WcXGWp2bTgusV5xsDgRn83XoHfbN1M7Zq3eCBYv
+to get started, enter:
+
+        ipfs cat /ipfs/QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv/readme
+
+
+Listing 6-12
+$ ipfs daemon
+Initializing daemon...
+Swarm listening on /ip4/10.0.75.1/tcp/4001
+Swarm listening on /ip4/127.0.0.1/tcp/4001
+Swarm listening on /ip4/169.254.164.245/tcp/4001
+Swarm listening on /ip4/169.254.170.245/tcp/4001
+Swarm listening on /ip4/169.254.189.121/tcp/4001
+Swarm listening on /ip4/169.254.230.188/tcp/4001
+Swarm listening on /ip4/172.18.160.1/tcp/4001
+Swarm listening on /ip4/192.168.1.6/tcp/4001
+Swarm listening on /ip4/192.168.51.129/tcp/4001
+Swarm listening on /ip6/::1/tcp/4001
+Swarm listening on /p2p-circuit/ipfs/QmPGx16WcXGWp2bTgusV5xsDgRn83XoHfbN1M7Zq3eCBYv
+Swarm announcing /ip4/10.0.75.1/tcp/4001
+Swarm announcing /ip4/127.0.0.1/tcp/4001
+Swarm announcing /ip4/169.254.164.245/tcp/4001
+Swarm announcing /ip4/169.254.170.245/tcp/4001
+Swarm announcing /ip4/169.254.189.121/tcp/4001
+Swarm announcing /ip4/169.254.230.188/tcp/4001
+Swarm announcing /ip4/172.18.160.1/tcp/4001
+Swarm announcing /ip4/192.168.1.6/tcp/4001
+Swarm announcing /ip4/192.168.51.129/tcp/4001
+Swarm announcing /ip6/::1/tcp/4001
+API server listening on /ip4/127.0.0.1/tcp/5001
+Gateway (readonly) server listening on /ip4/127.0.0.1/tcp/8080
+Daemon is ready
+
+
+
+Listing 6-13
+$ ipfs swarm peers
+/ip4/100.34.210.63/tcp/14655/ipfs/QmPRa5sovWPGhSDuEGU2cgfws5ra91bD89xTWmArJxickp
+/ip4/100.38.242.117/tcp/24885/ipfs/QmfGpAZPq1br1G6Q9KcLNqGKLnRjjmXvc6BD5yFfRVQv2y
+
+
+Listing 6-14
+$ ipfs add -r .
+added QmbFDRLYyZaaTv3EJmz2QGtUFpvDT9rM7xPQrQkjUuX4qc images/E.jpeg
+added QmUFVahZy2eLbyVqjxK47aoSCDW1MGzoCig5VA4z3sTMAD images
+
+
+Listing 6-15
+$ ipfs name publish QmUFVahZy2eLbyVqjxK47aoSCDW1MGzoCig5VA4z3sTMAD
+Published to QmPGx16WcXGWp2bTgusV5xsDgRn83XoHfbN1M7Zq3eCBYv: /ipfs/QmUFVahZy2eLbyVqjxK47aoSCDW1MGzoCig5VA4z3sTMAD
+		
+
+Listing 6-16
+// Bad 
+mapping (address => uint) private userAmount; 
+function withdrawAmount() public { 
+uint amountToWithdraw = userAmount[msg.sender]; 
+if (!(msg.sender.call.value(amountToWithdraw)())) { throw; } 
+// At this point, the function withdrawAmount() is called again 
+userAmount[msg.sender] = 0; 
+}
+
+
+Listing 6-17
+
+// Good 
+mapping (address => uint) private userAmount; 
+function withdrawAmount() public { 
+uint amountToWithdraw = userAmount[msg.sender]; 
+userAmount[msg.sender] = 0;
+if (!(msg.sender.call.value(amountToWithdraw)())) { throw; } 
+// At this point, the caller's code is executed, and can call withdrawAmount() again 
+}
+
+		
+		
+Listing 7-1.MyContract.sol
+pragma solidity ^0.4.0; 
+
+contract MyContract {
+    uint private amount; 
+
+    function MyContract() 
+    {
+        amount = 101; 
+    }
+
+    function updateAmount(uint newAmount)
+        public
+        returns (bool success)
+    {
+     require(newAmount > 100); /* Contract stores numbers greater than 100. */
+     amount = newAmount; 
+     return true;    
+    }
+	
+    function getAmount()
+        public
+        returns (uint)
+     {
+        return amount;
+      }
+}
+
+
+Listing 7-2.MyContractTest.sol
+pragma solidity ^0.4.0;
+
+import "truffle/Assert.sol";
+import "truffle/DeployedAddresses.sol";
+import "../contracts/MyContract.sol";
+
+contract MyContractTest {
+
+function testInitialStoredValue() {
+		MyContract mycontract = new MyContract(); 
+		uint expected = 101;
+		Assert.equal(mycontract.getAmount(), expected, "Initial amount set should be 101.");
+    }
+	
+function testTheThrow() {
+		MyContract mycontract = new MyContract(); 
+		ThrowProxy throwproxy = new ThrowProxy(address(mycontract)); 
+		MyContract(address(throwproxy)).updateAmount(97);
+		bool r = throwproxy.execute.gas(200000)(); 
+		Assert.isFalse(r, "Should be false because is should throw!");
+	}
+
+function testNoThrow() {
+		MyContract mycontract = new MyContract(); 
+		ThrowProxy throwproxy = new ThrowProxy(address(mycontract)); 
+		MyContract(address(throwproxy)).updateAmount(122);
+		bool r = throwproxy.execute.gas(200000)(); 
+		Assert.isTrue(r, "Should be true!");
+	}
+}
+
+// Proxy contract for testing throws
+contract ThrowProxy {
+  address public target;
+  bytes data;
+
+  function ThrowProxy(address _target) {
+    target = _target;
+  }
+
+  //prime the data using the fallback function.
+  function() {
+    data = msg.data;
+  }
+
+  function execute() returns (bool) {
+    return target.call(data);
+  }
+}
+
+
+
+Listing 7-3
+F:\ethereum\myTruffle>truffle.cmd test
+Using network 'development'.
+
+Compiling .\contracts\ConvertLib.sol...
+Compiling .\contracts\MetaCoin.sol...
+Compiling .\contracts\MyContract.sol...
+Compiling .\test\MyContractTest.sol...
+Compiling .\test\TestMetacoin.sol...
+Compiling .\test\TestMyContract.sol...
+Compiling truffle/Assert.sol...
+Compiling truffle/DeployedAddresses.sol...
+
+
+Listing 7-4 
+F:\ethereum\embark>embark demo
+Initializing Embark Template....
+Installing packages...
+Init complete
+
+App ready at embark_demo
+-------------------
+Next steps:
+-> cd embark_demo
+-> embark blockchain or embark simulator
+open another console in the same directory and run
+-> embark run
+For more info go to http://embark.status.im
+
+
+Listing 7-5
+F:\ethereum\embark\embark_demo>embark simulator
+Ganache CLI v6.1.8 (ganache-core: 2.2.1)
+
+Available Accounts
+==================
+(0) 0xb8d851486d1c953e31a44374aca11151d49b8bb3 (~100 ETH)
+(1) 0xf6d5c6d500cac10ee7e6efb5c1b479cfb789950a (~100 ETH)
+(2) 0xf09324e7a1e2821c2f7a4a47675f9cf0b1a5eb7f (~100 ETH)
+(3) 0xfbaf82a227dcebd2f9334496658801f63299ba24 (~100 ETH)
+
+
+
+Listing 7-6
+deploying contracts                                                                                                  │
+│ deploying SimpleStorage with 134157 gas                                                                              │
+│ SimpleStorage deployed at 0x04D45b51fe4f00b4478F8b0719Fa779f14c8A194                                                 │
+│ finished deploying contracts                                                                                         │
+│ ready to watch file changes                                                                                          │
+│ webserver available at http://localhost:8000
+
+
+
+Listing 9-1
+pragma solidity ^0.4.0;
+
+interface ERC20 {
+    function totalSupply() constant returns (uint _totalSupply);
+    function balanceOf(address _owner) constant returns (uint balance);
+    function transfer(address _to, uint _value) returns (bool success);
+    function transferFrom(address _from, address _to, uint _value) returns (bool success);
+    function approve(address _spender, uint _value) returns (bool success);
+    function allowance(address _owner, address _spender) constant returns (uint remaining);
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
+}
+
+
+
+Listing 9-2
+import "browser/ERC20.sol";
+
+contract MyFirstToken is ERC20 {
+    string public constant symbol = "DMY";
+    string public constant name = "My First Token";
+    uint8 public constant decimals = 18;
+
+    uint private constant __totalSupply = 1000;
+    mapping (address => uint) private __balanceOf;
+    mapping (address => mapping (address => uint)) private __allowances;
+
+    function MyFirstToken() {
+            __balanceOf[msg.sender] = __totalSupply;
+    }
+
+    function totalSupply() constant returns (uint _totalSupply) {
+        _totalSupply = __totalSupply;
+    }
+
+    function balanceOf(address _addr) constant returns (uint balance) {
+        return __balanceOf[_addr];
+    }
+
+    function transfer(address _to, uint _value) returns (bool success) {
+        if (_value > 0 && _value <= balanceOf(msg.sender)) {
+            __balanceOf[msg.sender] -= _value;
+            __balanceOf[_to] += _value;
+            return true;
+        }
+        return false;
+    }
+
+    function transferFrom(address _from, address _to, uint _value) returns (bool success) {
+        if (__allowances[_from][msg.sender] > 0 &&
+            _value > 0 &&
+            __allowances[_from][msg.sender] >= _value &&
+            __balanceOf[_from] >= _value) {
+            __balanceOf[_from] -= _value;
+            __balanceOf[_to] += _value;
+             __allowances[_from][msg.sender] -= _value;
+            return true;
+        }
+        return false;
+    }
+
+    function approve(address _spender, uint _value) returns (bool success) {
+        __allowances[msg.sender][_spender] = _value;
+        return true;
+    }
+
+    function allowance(address _owner, address _spender) constant returns (uint remaining) {
+        return __allowances[_owner][_spender];
+    }
+}
+
+
+Listing 9-3
+pragma solidity ^0.4.18;
+
+contract PropertyTransaction {
+    /**This contract is a basic land registry program where Only
+    the contract initiator can assign properties to people may be after
+    some document verification*/
+
+
+    Property[] properties; // registered properties
+    address landRegistryAdmin; //landRegistryAdmin is the user who has initiated the contract
+
+    struct Property{
+        uint propertyId; // each property has an unique propertyId
+        bytes32[] ownershipHistory; //Property ownership is a historical data that has a seller, an owner/buyer and a date of transaction
+
+    }
+
+    /**PropertySold is an event that informs on success or failure of a transaction*/
+    event PropertySold(uint propertyId,
+                       string ownership,
+                       bool flag,
+                       string message);
+
+
+
+    constructor() public {
+        landRegistryAdmin = msg.sender; // initiate the landRegistryAdmin as the contract creator and initiate some registered properties
+
+        Property memory property0 = Property(0, new bytes32[](0));
+        properties.push(property0);
+        properties[properties.length-1].ownershipHistory.push("Buyer:b0, Seller:s0, DOT:dt0");
+
+        Property memory property1 = Property(1, new bytes32[](0));
+        properties.push(property1);
+        properties[properties.length-1].ownershipHistory.push("Buyer:b1, Seller:s1, DOT:dt1");
+
+        Property memory property2 = Property(2, new bytes32[](0));
+        properties.push(property2);
+        properties[properties.length-1].ownershipHistory.push("Buyer:b2, Seller:s2, DOT:dt2");
+    }
+
+
+    /**Land registration authority may alter ownership to any of the existing 
+    properties*/
+    function addNewOwner(uint propertyId, bytes32 ownership) public {
+    if (msg.sender != landRegistryAdmin) {
+            emit PropertySold(propertyId, 
+                              bytes32ToString(ownership), 
+                              false,
+                              'Only land registry department can assign ownership to buyer');
+        }
+
+        for (uint i = 0; i < properties.length; i++) {
+            if (properties[i].propertyId == propertyId) {
+                properties[i].ownershipHistory.push(ownership);
+                emit PropertySold(propertyId, 
+                              bytes32ToString(ownership), 
+                              true,
+                              'New ownership added to existing property');
+                break;
+            }
+        }
+
+        // propertyId does not exist in record, hence create a new transaction and add to registered properties
+        Property memory property = Property(properties.length, new bytes32[](0));
+        properties.push(property);
+        properties[properties.length-1].ownershipHistory.push(ownership);
+        emit PropertySold(propertyId, 
+                              bytes32ToString(ownership), 
+                              true,
+                              'New Property added');
+    }
+
+
+   function retrievePropertyHistory(uint propertyId) public view returns(bytes32[]){
+        for (uint i = 0; i < properties.length; i++) {
+            if (properties[i].propertyId == propertyId) {
+                return properties[i].ownershipHistory;
+            }
+        }
+    }
+
+    function bytes32ToString(bytes32 x) private pure returns (string) {
+        bytes memory bytesString = new bytes(32);
+        uint charCount = 0;
+        for (uint j = 0; j < 32; j++) {
+            byte char = byte(bytes32(uint(x) * 2 ** (8 * j)));
+            if (char != 0) {
+                bytesString[charCount] = char;
+                charCount++;
+            }
+        }
+        bytes memory bytesStringTrimmed = new bytes(charCount);
+        for (j = 0; j < charCount; j++) {
+            bytesStringTrimmed[j] = bytesString[j];
+        }
+        return string(bytesStringTrimmed);
+    }
+
+}
+
+		
